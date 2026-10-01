@@ -9,7 +9,16 @@ class InMemoryCache<K, V> {
         store[key] = value
     }
 
+    fun getAll(): List<V> = store.values.toList()
+
+    fun isEmpty(): Boolean = store.isEmpty()
+
+    fun isNotEmpty(): Boolean = store.isNotEmpty()
+
+    fun size(): Int = store.size
+
     fun clear() {
         store.clear()
     }
 }
+

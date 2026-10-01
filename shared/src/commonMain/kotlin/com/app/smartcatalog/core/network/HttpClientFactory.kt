@@ -2,6 +2,7 @@ package com.app.smartcatalog.core.network
 
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
+import io.ktor.client.plugins.cache.HttpCache
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.serialization.kotlinx.json.json
@@ -14,6 +15,7 @@ fun createHttpClient(engine: HttpClientEngine = createHttpClientEngine()): HttpC
         defaultRequest {
             url(ApiConstants.BASE_URL)
         }
+        install(HttpCache)
         install(ContentNegotiation) {
             json(
                 Json {

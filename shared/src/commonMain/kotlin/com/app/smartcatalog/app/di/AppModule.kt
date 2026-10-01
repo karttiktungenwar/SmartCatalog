@@ -17,6 +17,7 @@ import com.app.smartcatalog.features.products.presentation.list.ProductListViewM
 import io.ktor.client.HttpClient
 import org.koin.core.context.startKoin
 import org.koin.core.module.dsl.viewModel
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 private var isKoinInitialized = false
@@ -32,9 +33,15 @@ fun initKoin() {
 val appModule = module {
     single<HttpClient> { createHttpClient() }
     single { ProductApi(get()) }
-    single { InMemoryCache<Int, Product>() }
-    single { InMemoryCache<String, List<Category>>() }
-    single<ProductRepository> { ProductRepositoryImpl(get(), get(), get()) }
+    single(named("productCache")) { InMemoryCache<Int, Product>() }
+    single(named("categoryCache")) { InMemoryCache<String, List<Category>>() }
+    single<ProductRepository> {
+        ProductRepositoryImpl(
+            productApi = get(),
+            productCache = get(named("productCache")),
+            categoryCache = get(named("categoryCache")),
+        )
+    }
 
     factory { GetProductsUseCase(get()) }
     factory { SearchProductsUseCase(get()) }
